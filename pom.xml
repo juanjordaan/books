@@ -42,11 +42,8 @@
 
 	<modules>
 		<module>application</module>
-<!--		<module>croupier</module>
-		<module>players</module>
-		<module>slots</module>
-		<module>backoffice</module>-->
 	</modules>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
