@@ -1,0 +1,48 @@
+FROM eclipse-temurin:21-jdk-alpine as builder
+
+RUN apk add --no-cache bash procps curl tar
+
+# common for all images
+ENV MAVEN_HOME /usr/share/maven
+
+COPY --from=maven:3.9.6-eclipse-temurin-11 ${MAVEN_HOME} ${MAVEN_HOME}
+COPY --from=maven:3.9.6-eclipse-temurin-11 /usr/local/bin/mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
+COPY --from=maven:3.9.6-eclipse-temurin-11 /usr/share/maven/ref/settings-docker.xml /usr/share/maven/ref/settings-docker.xml
+
+RUN ln -s ${MAVEN_HOME}/bin/mvn /usr/bin/mvn
+
+ARG MAVEN_VERSION=3.9.6
+ARG USER_HOME_DIR="/root"
+ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+
+ENV JAVA_MINIMAL="/opt/java-minimal"
+
+# build minimal JRE
+RUN jlink \
+    --verbose \
+    --add-modules \
+        java.base,java.desktop,java.sql,java.naming,java.management,java.security.jgss,java.instrument \
+    --compress 2 --strip-debug --no-header-files --no-man-pages \
+    --release-info="add:IMPLEMENTOR=radistao:IMPLEMENTOR_VERSION=radistao_JRE" \
+    --output "$JAVA_MINIMAL"
+
+WORKDIR /app
+
+COPY *.xml ./
+COPY src ./src
+
+RUN mvn clean
+RUN mvn package
+
+
+FROM alpine:latest
+
+ENV JAVA_HOME=/opt/java-minimal
+ENV PATH="$PATH:$JAVA_HOME/bin"
+
+COPY --from=builder "$JAVA_HOME" "$JAVA_HOME"
+COPY --from=builder /app/application/target/*.jar app.jar
+
+EXPOSE 80 443
+
+ENTRYPOINT ["java", "-jar", "/app.jar"]

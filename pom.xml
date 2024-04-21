@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.5</version>
+	</parent>
+	
+	<developers>
+		<developer>
+			<name>Juan Jordaan</name>
+			<roles>
+				<role>Code Monkey</role>
+			</roles>
+			<organization>Private</organization>
+			<email>juan jordaan at gmail</email>
+		</developer>
+	</developers>
+
+	<groupId>cloud.jordaan.juan.books</groupId>
+	<artifactId>books-parent</artifactId>
+	<version>1.0.1</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<java.version>21</java.version>
+		<java.source.version>${java.version}</java.source.version>
+		<java.target.version>${java.version}</java.target.version>
+		<maven-compiler-source.version>${java.version}</maven-compiler-source.version>
+		<maven-compiler-target.version>${java.version}</maven-compiler-target.version>
+		<maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+		<testcontainers-bom.version>1.19.3</testcontainers-bom.version>
+		<mapstruct.version>1.5.5.Final</mapstruct.version>
+		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+		<testcontainers-bom.version>1.17.3</testcontainers-bom.version>
+		<spring-cloud-dependencies.version>2023.0.0</spring-cloud-dependencies.version>
+	</properties>
+
+	<modules>
+		<module>application</module>
+<!--		<module>croupier</module>
+		<module>players</module>
+		<module>slots</module>
+		<module>backoffice</module>-->
+	</modules>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud-dependencies.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers-bom</artifactId>
+				<version>${testcontainers-bom.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.mapstruct</groupId>
+				<artifactId>mapstruct</artifactId>
+				<version>${mapstruct.version}</version>
+				<type>jar</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<configuration>
+						<executable>true</executable>
+						<excludes>
+							<exclude>
+								<groupId>org.projectlombok</groupId>
+								<artifactId>lombok</artifactId>
+							</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin.version}</version>
+					<configuration>
+						<source>${maven-compiler-source.version}</source>
+						<target>${maven-compiler-target.version}</target>
+						<annotationProcessorPaths>
+							<path>
+								<groupId>org.projectlombok</groupId>
+								<artifactId>lombok</artifactId>
+								<version>${lombok.version}</version>
+							</path>
+							<path>
+								<groupId>org.mapstruct</groupId>
+								<artifactId>mapstruct-processor</artifactId>
+								<version>${mapstruct.version}</version>
+							</path>
+							<dependency>
+								<groupId>org.projectlombok</groupId>
+								<artifactId>lombok-mapstruct-binding</artifactId>
+								<version>${lombok-mapstruct-binding.version}</version>
+							</dependency>
+						</annotationProcessorPaths>
+						<compilerArgs>
+							<compilerArg>-Amapstruct.defaultComponentModel=spring</compilerArg>
+						</compilerArgs>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

@@ -1,0 +1,49 @@
+spring:
+  config:
+    activate:
+      on-profile: default
+
+---
+
+server:
+  port: 80
+  compression.enabled: true
+
+server.servlet.context-path: /api/v1
+#spring:
+#  webflux:
+#    base-path: /books
+
+---
+
+spring:
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+
+management.endpoints.web.exposure.include: info,health,metrics,refresh
+
+springdoc:
+  swagger-ui:
+    enabled: true
+
+---
+
+#spring:
+#  r2dbc:
+#    url: r2dbc:h2:file:///./.books
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./.books
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+---
+
+spring:
+  liquibase:
+    url: jdbc:h2:file:./.books
+    enabled: true
+    change-log : db/changelog/changelog-master.xml
